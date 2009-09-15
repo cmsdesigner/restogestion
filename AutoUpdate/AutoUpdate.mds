@@ -1,0 +1,16 @@
+<Combine name="AutoUpdate" fileversion="2.0">
+  <Configurations active="Debug|Any CPU">
+    <Configuration name="Debug|Any CPU" ctype="CombineConfiguration">
+      <Entry build="True" name="AutoUpdate" configuration="Debug|Any CPU" />
+    </Configuration>
+    <Configuration name="Release|Any CPU" ctype="CombineConfiguration">
+      <Entry build="True" name="AutoUpdate" configuration="Release|Any CPU" />
+    </Configuration>
+  </Configurations>
+  <StartMode startupentry="AutoUpdate" single="True">
+    <Execute type="None" entry="AutoUpdate" />
+  </StartMode>
+  <Entries>
+    <Entry filename="./AutoUpdate.vbproj" />
+  </Entries>
+</Combine>

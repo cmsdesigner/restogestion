@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<UserCombinePreferences filename="/home/akuma/Documents/Programmation/VB.NET/RestoGestion/AutoUpdate/AutoUpdate.mds">
+  <Files />
+  <Views>
+    <ViewMemento Id="MonoDevelop.Ide.Gui.Pads.ProjectPad">
+      <TreeView>
+        <Node expanded="True">
+          <Node name="AutoUpdate" expanded="True">
+            <Node name="References" expanded="True" />
+          </Node>
+        </Node>
+      </TreeView>
+    </ViewMemento>
+    <ViewMemento Id="MonoDevelop.Ide.Gui.Pads.ClassPad">
+      <TreeView>
+        <Node expanded="True" />
+      </TreeView>
+    </ViewMemento>
+    <ViewMemento Id="MonoQuery.DatabasePad">
+      <TreeView>
+        <Node expanded="False" />
+      </TreeView>
+    </ViewMemento>
+    <ViewMemento Id="MonoDevelop.NUnit.TestPad">
+      <TreeView>
+        <Node expanded="False" />
+      </TreeView>
+    </ViewMemento>
+  </Views>
+  <Properties>
+    <Properties>
+      <Property key="ActiveWindow" value="" />
+      <Property key="ActiveConfiguration" value="Debug|Any CPU" />
+    </Properties>
+  </Properties>
+</UserCombinePreferences>
