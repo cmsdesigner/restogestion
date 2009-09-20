@@ -29,17 +29,18 @@ Option Strict On
 '***********************************************************
 
 Imports System.Data.SQLite
+Imports System.Data
 
 '//Classe pour la gestion de la base //
 Public Class Base
 	 
-    Private Connexion As SQLiteConnection
+    Private Connexion As IDbConnection
 
     Public Sub New(ByVal BasePath As String)
         Dim ConnexionString As String
         ConnexionString = "data source=" + BasePath
-        Connexion = New SQLiteConnection(ConnexionString)
-
+        Connexion = New SQLiteConnection()
+        Connexion.ConnectionString = ConnexionString
         Try
             Connexion.Open()
         Catch ex As Exception
@@ -57,26 +58,25 @@ Public Class Base
     End Sub
 
     Public Function ExecuteQuery(ByVal Query As String) As ArrayList
-        Dim Command As New SQLiteCommand(Connexion)
+        Dim Command As IDbCommand
         Dim result As ArrayList
-        Dim reader As SQLiteDataReader
+        Dim reader As IDataReader
         Dim row As Hashtable
 
         result = New ArrayList
 
+        Command = Connexion.CreateCommand
         Command.CommandText = Query
         Try
-            reader = Command.ExecuteReader
-            If reader.HasRows Then
-                While reader.Read()
-                    row = New Hashtable(reader.FieldCount)
-                    For i As Integer = 0 To reader.FieldCount - 1
-                        row.Add(reader.GetName(i), reader.GetValue(i))
-                    Next
-                    result.Add(row)
-                    row = Nothing
-                End While
-            End If
+            reader = Command.ExecuteReader()
+            While reader.Read()
+                row = New Hashtable(reader.FieldCount)
+                For i As Integer = 0 To reader.FieldCount - 1
+                    row.Add(reader.GetName(i), reader.GetValue(i))
+                Next
+                result.Add(row)
+                row = Nothing
+            End While
             reader.Close()
         Catch ex As Exception
             Throw
@@ -88,26 +88,25 @@ Public Class Base
     End Function
 
     Public Function ExecuteQuery(ByVal Query As String, ByVal params As ArrayList) As ArrayList
-        Dim Command As New SQLiteCommand(Connexion)
+        Dim Command As IDbCommand
         Dim result As ArrayList
-        Dim reader As SQLiteDataReader
+        Dim reader As IDataReader
         Dim row As Hashtable
 
         result = New ArrayList
 
+        Command = Connexion.CreateCommand
         Command = PrepareQuery(Query, params)
         Try
             reader = Command.ExecuteReader
-            If reader.HasRows Then
-                While reader.Read()
-                    row = New Hashtable(reader.FieldCount)
-                    For i As Integer = 0 To reader.FieldCount - 1
-                        row.Add(reader.GetName(i), reader.GetValue(i))
-                    Next
-                    result.Add(row)
-                    row = Nothing
-                End While
-            End If
+            While reader.Read()
+                row = New Hashtable(reader.FieldCount)
+                For i As Integer = 0 To reader.FieldCount - 1
+                    row.Add(reader.GetName(i), reader.GetValue(i))
+                Next
+                result.Add(row)
+                row = Nothing
+            End While
             reader.Close()
         Catch ex As Exception
             Throw
@@ -120,53 +119,47 @@ Public Class Base
 
 
     Public Function ExecuteNonQuery(ByVal Query As String) As Integer
-        Dim Command As New SQLiteCommand(Connexion)
+        Dim Command As IDbCommand
         Dim result As Integer
-        Dim tran As SQLiteTransaction
 
-        tran = Connexion.BeginTransaction()
+        Command = Connexion.CreateCommand
         Command.CommandText = Query
         Try
             result = Command.ExecuteNonQuery
-            tran.Commit()
         Catch ex As Exception
             Throw
         Finally
             Command.Dispose()
-            tran.Dispose()
         End Try
 
         Return result
     End Function
 
     Public Function ExecuteNonQuery(ByVal Query As String, ByVal params As ArrayList) As Integer
-        Dim Command As New SQLiteCommand(Connexion)
+        Dim Command As IDbCommand
         Dim result As Integer
-        Dim tran As SQLiteTransaction
 
-        tran = Connexion.BeginTransaction()
+        Command = Connexion.CreateCommand
         Command = PrepareQuery(Query, params)
         Try
             result = Command.ExecuteNonQuery
-            tran.Commit()
         Catch ex As Exception
-            tran.Rollback()
             Throw
         Finally
             Command.Dispose()
-            tran.Dispose()
         End Try
 
         Return result
     End Function
 
-    Private Function PrepareQuery(ByVal Query As String, ByVal params As ArrayList) As SQLiteCommand
+    Private Function PrepareQuery(ByVal Query As String, ByVal params As ArrayList) As IDbCommand
         Dim it As IEnumerator
-        Dim result As New SQLiteCommand(Query, Connexion)
+        Dim result As IDbCommand
 
+        result = Connexion.CreateCommand
         it = params.GetEnumerator
         While it.MoveNext
-            result.Parameters.AddWithValue(Nothing, it.Current)
+            result.Parameters.Add(it.Current)
         End While
 
         Return result
