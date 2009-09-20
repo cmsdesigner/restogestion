@@ -31,9 +31,8 @@ Partial Class frmUpdate
         Me.lblStatus.AutoSize = True
         Me.lblStatus.Location = New System.Drawing.Point(12, 9)
         Me.lblStatus.Name = "lblStatus"
-        Me.lblStatus.Size = New System.Drawing.Size(39, 13)
+        Me.lblStatus.Size = New System.Drawing.Size(0, 13)
         Me.lblStatus.TabIndex = 0
-        Me.lblStatus.Text = "Label1"
         '
         'pbUpdate
         '
