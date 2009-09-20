@@ -60,6 +60,6 @@ Public Class frmAbout
 
     Private Sub cmdCredit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdCredit.Click
         'On affiche l'aide à la page correpondante
-        'TODO Help.ShowHelp(Me, HELPFILE, HelpNavigator.TopicId, "14")
+        Help.ShowHelp(Me, HELPPATH + "credits.htm")
     End Sub
 End Class
