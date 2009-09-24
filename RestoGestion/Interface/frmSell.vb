@@ -220,7 +220,7 @@ Public Class frmSell
 
         If Not cboDesignation.SelectedItem Is Nothing Then
             If txtQuantity.Text <> "" Then
-                If CInt(txtQuantity.Text) < 0 Then
+                If CInt(txtQuantity.Text) > 0 Then
                     Try
                         'Ajout en base
                         order = CurrentTable.Item(txtCode.Text)
