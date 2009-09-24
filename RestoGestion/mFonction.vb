@@ -42,15 +42,15 @@ Module mFonction
         Dim passwordOk As Boolean
 
         Application.EnableVisualStyles()
-        trace = New Log(LOGFILE)
+        trace = New Log(Consts.LOGFILE)
         Try
-            bdd = New Base(BASEPATH)
+            bdd = New Base(Consts.BASEPATH)
             config = New Configuration(bdd)
             config.Load()
-            If Not File.Exists(LANGUAGEFILEPATH + config.LanguageFile) Then
-                config.LanguageFile = Directory.GetFiles(LANGUAGEFILEPATH, "*.lng")(0).Replace(LANGUAGEFILEPATH, "")
+            If Not File.Exists(Consts.LANGUAGEFILEPATH + config.LanguageFile) Then
+                config.LanguageFile = Directory.GetFiles(Consts.LANGUAGEFILEPATH, "*.lng")(0).Replace(Consts.LANGUAGEFILEPATH, "")
             End If
-            label = New LanguageFile(LANGUAGEFILEPATH + config.LanguageFile)
+            label = New LanguageFile(Consts.LANGUAGEFILEPATH + config.LanguageFile)
             passwordOk = True
             If config.HasPassword Then
                 frmPass = New frmPassword
@@ -77,7 +77,7 @@ Module mFonction
         Catch ex As Exception
             TraceError(ex)
         Finally
-            label.CloseFile()
+            label = Nothing
             config.SaveConfig()
             bdd.Close()
             trace.Close()
@@ -104,30 +104,11 @@ Module mFonction
     End Sub
 
     Public Sub VerifyUpdate()
-        Dim wbcUpdate As New WebClient
-        Dim bIsUpdate As Boolean = True
-        Dim result As DialogResult
-
-        Application.DoEvents()
-        If Not Directory.Exists(Application.StartupPath + "\update") Then
-            Directory.CreateDirectory(Application.StartupPath + "\update")
-        End If
-        Try
-            wbcUpdate.DownloadFile("http://511.free.fr/update/ServerManifest.xml", Application.StartupPath + "\update\ServerManifest.xml")
-        Catch ex As Exception
-            TraceError(ex)
-        End Try
-        If Not File.Exists(Application.StartupPath + "\ServerManifest.xml") Then
-            bIsUpdate = False
-        Else
-            bIsUpdate = verifyMd5Hash(getMd5Hash(Application.StartupPath + "\update\ServerManifest.xml"), getMd5Hash(Application.StartupPath + "\ServerManifest.xml"))
-        End If
-        If Not bIsUpdate Then
-            'TODO result = MsgBox(xmlForm.GetElementValue("Texts/Table", "UpdateAsk"), MsgBoxStyle.Question + MsgBoxStyle.YesNo, xmlForm.GetElementValue("Texts/Table", "UpdateAskTitle"))
-            If result.Equals(DialogResult.Yes) Then
-                'TODO LANCER MAJ
-            End If
-        End If
+        Dim p As New Process
+        Dim pi As New ProcessStartInfo(Application.StartupPath + "\AutoUpdate.exe")
+        pi.Arguments = "RestoGestion.exe"
+        p.StartInfo = pi
+        p.Start()
     End Sub
 
     'Hash an input string and return the hash as

@@ -40,7 +40,7 @@ Public Class frmOption
         Dim sFiles() As String
         Dim dt As New Date()
 
-        bill = New PrintFile(PRINTFILEPATH)
+        bill = New PrintFile(Consts.PRINTFILEPATH)
 
         'recupération des libellés suivant la langue
         Me.Text = label(LanguageFile.OPTION_FORM).Label(LanguageFile.NAME).Value
@@ -254,13 +254,13 @@ Public Class frmOption
         AddHandler cboLanguage.KeyPress, AddressOf NextTab
         AddHandler txtPassword.KeyPress, AddressOf NextTab
         AddHandler txtVat.KeyPress, AddressOf NextTab
-        hlpOption.HelpNamespace = HELPPATH + "options.htm"
+        hlpOption.HelpNamespace = Consts.HELPPATH + "options.htm"
 
         Try
             'Récupération de la liste des langues a partir des fichiers présents dans ".\Langues\"
-            sFiles = Directory.GetFiles(LANGUAGEFILEPATH, "*.lng", SearchOption.TopDirectoryOnly)
+            sFiles = Directory.GetFiles(Consts.LANGUAGEFILEPATH, "*.lng", SearchOption.TopDirectoryOnly)
             For Each s As String In sFiles
-                cboLanguage.Items.Add(s.Replace(LANGUAGEFILEPATH, ""))
+                cboLanguage.Items.Add(s.Replace(Consts.LANGUAGEFILEPATH, ""))
             Next
             'on remplit les champs principaux
             txtVat.Text = config.Tva.ToString
@@ -755,7 +755,7 @@ Public Class frmOption
             bill.Footer(PrintFile.FOOTERTEXT).Font = f.ConvertToString(txtFooter.Font)
             bill.Footer(PrintFile.FOOTERTEXT).Color = txtFooter.ForeColor.ToArgb
 
-            bill.WriteFile(PRINTFILEPATH)
+            bill.WriteFile(Consts.PRINTFILEPATH)
             MessageBox.Show(label(LanguageFile.OPTION_FORM).Label(LanguageFile.CAUTION).Value(), "", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
             TraceError(ex)

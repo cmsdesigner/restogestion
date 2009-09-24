@@ -32,16 +32,22 @@ Imports System.IO
 Imports System.Net
 Imports System.Security.Cryptography
 Imports System.Text
-Imports Microsoft.VisualBasic
+Imports RestoGestion
 
 
 Public Class frmUpdate
     Private Const SERVERURL As String = "http://localhost/web/update"
     'Private Const SERVERURL As String = "http://511.free.fr/update"
+    Private Const UPDATEFILE As String = "ServerManifest.xml"
+    Private db As Base
+    Private label As LanguageFile
+    Private config As Configuration
+    Private trace As Log
 
     Private Sub frmUpdate_Shown(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Shown
         Dim wbcUpdate As New WebClient
         Dim bIsUpdate As Boolean = False
+        Dim bUpdate As Boolean = True
         Dim xmlUpdate As UpdateFile
         Dim it As IEnumerator(Of Names)
         Dim SQLFiles As New ArrayList
@@ -49,66 +55,89 @@ Public Class frmUpdate
         pbUpdate.Value = 0
         pbUpdate.Maximum = 1
 
+        trace = New Log(Application.StartupPath + "\AutoUpdate.log")
         Try
+            db = New Base(Consts.BASEPATH)
+            config = New Configuration(db)
+            config.Load()
+            If Not File.Exists(Consts.LANGUAGEFILEPATH + config.LanguageFile) Then
+                config.LanguageFile = Directory.GetFiles(Consts.LANGUAGEFILEPATH, "*.lng")(0).Replace(Consts.LANGUAGEFILEPATH, "")
+            End If
+            label = New LanguageFile(Consts.LANGUAGEFILEPATH + config.LanguageFile)
+
             'on crée le répertoire d'acceuil des mises à jour.
             If Not Directory.Exists(Application.StartupPath + "\update") Then
                 Directory.CreateDirectory(Application.StartupPath + "\update")
             End If
 
             'on recupère le fichier XML contenant les infos de MAJ
-            lblStatus.Text = "Téléchargement du fichier ServerManifest.xml..."
+            lblStatus.Text = label(LanguageFile.UPDATE_LABELS).Label(LanguageFile.DOWNLOADING).Value.Replace("%s", UPDATEFILE)
             Application.DoEvents()
-            wbcUpdate.DownloadFile(SERVERURL + "/ServerManifest.xml", Application.StartupPath + "\update\ServerManifest.xml")
-            lblStatus.Text = "Téléchargement du fichier ServerManifest.xml terminé"
+            wbcUpdate.DownloadFile(SERVERURL + "/" + UPDATEFILE, Application.StartupPath + "\update\" + UPDATEFILE)
+            lblStatus.Text = label(LanguageFile.UPDATE_LABELS).Label(LanguageFile.DOWNLOADED).Value.Replace("%s", UPDATEFILE)
             Application.DoEvents()
 
             'on vérifie qu'il n'est pas identique au dernier télécharger
-            If File.Exists(Application.StartupPath + "\ServerManifest.xml") Then
-                bIsUpdate = verifyHash(getHash(Application.StartupPath + "\update\ServerManifest.xml"), getHash(Application.StartupPath + "\ServerManifest.xml"))
+            If File.Exists(Application.StartupPath + "\" + UPDATEFILE) Then
+                bIsUpdate = verifyHash(getHash(Application.StartupPath + "\update\" + UPDATEFILE), getHash(Application.StartupPath + "\" + UPDATEFILE))
             End If
 
             'identique, alors on ne fait rien
             If bIsUpdate Then
-                MessageBox.Show("Pas de mise à jour disponible", "Mise à jour", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                lblStatus.Text = label(LanguageFile.UPDATE_LABELS).Label(LanguageFile.NOUPDATE).Value
+                MessageBox.Show(label(LanguageFile.UPDATE_LABELS).Label(LanguageFile.NOUPDATE).Value, label(LanguageFile.UPDATE_LABELS).Label(LanguageFile.TITLE).Value, MessageBoxButtons.OK, MessageBoxIcon.Information)
             Else
+
                 'on commence la mise à jour
                 'Si on execute depuis l'application principale, on termine l'application
                 If My.Application.CommandLineArgs.Count > 0 Then
-                    KillAppExe(My.Application.CommandLineArgs(0).Replace(".exe", ""))
+                    If MessageBox.Show(label(LanguageFile.UPDATE_LABELS).Label(LanguageFile.UPDATEQUESTION).Value, label(LanguageFile.UPDATE_LABELS).Label(LanguageFile.TITLE).Value, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                        KillAppExe(My.Application.CommandLineArgs(0).Replace(".exe", ""))
+                    Else
+                        bUpdate = False
+                    End If
                 End If
-                'on ouvre le fichier XML
-                xmlUpdate = New UpdateFile(Application.StartupPath + "\update\ServerManifest.xml")
-                pbUpdate.Maximum += xmlUpdate.Count
-                Application.DoEvents()
-                it = xmlUpdate.GetEnumerator
-                While it.MoveNext
-                    Dim CurrentFile As String = "\" + it.Current.Directory + "\" + it.Current.Filename
-                    If Not Directory.Exists(Application.StartupPath + "\" + it.Current.Directory) Then
-                        Directory.CreateDirectory(Application.StartupPath + "\" + it.Current.Directory)
-                    End If
-                    If Not verifyHash(it.Current.Hash, getHash(Application.StartupPath + CurrentFile)) Then
-                        If it.Current.Extension.Equals("db") Or it.Current.Extension.Equals("lng") Or it.Current.Extension.Equals("xml") Then
-                            BackupFile(Application.StartupPath + CurrentFile)
+                If bUpdate Then
+                    'on ouvre le fichier XML
+                    xmlUpdate = New UpdateFile(Application.StartupPath + "\update\" + UPDATEFILE)
+                    pbUpdate.Maximum += xmlUpdate.Count
+                    Application.DoEvents()
+                    it = xmlUpdate.GetEnumerator
+                    While it.MoveNext
+                        Dim CurrentFile As String = "\" + it.Current.Directory + "\" + it.Current.Filename
+                        If Not Directory.Exists(Application.StartupPath + "\" + it.Current.Directory) Then
+                            Directory.CreateDirectory(Application.StartupPath + "\" + it.Current.Directory)
                         End If
-                        If it.Current.Extension.Equals("sql") Then
-                            wbcUpdate.DownloadFile(SERVERURL + CurrentFile.Replace("\", "/"), Application.StartupPath + "\update" + CurrentFile)
-                            SQLFiles.Add(Application.StartupPath + "\update" + CurrentFile)
-                        Else
-                            wbcUpdate.DownloadFile(SERVERURL + CurrentFile.Replace("\", "/"), Application.StartupPath + CurrentFile)
+                        If Not verifyHash(it.Current.Hash, getHash(Application.StartupPath + CurrentFile)) Then
+                            If it.Current.Extension.Equals("db") Or it.Current.Extension.Equals("lng") Or it.Current.Extension.Equals("xml") Then
+                                BackupFile(Application.StartupPath + CurrentFile)
+                            End If
+                            lblStatus.Text = label(LanguageFile.UPDATE_LABELS).Label(LanguageFile.DOWNLOADING).Value.Replace("%s", it.Current.Filename)
+                            Application.DoEvents()
+                            If it.Current.Extension.Equals("sql") Then
+                                wbcUpdate.DownloadFile(SERVERURL + CurrentFile.Replace("\", "/"), Application.StartupPath + "\update" + CurrentFile)
+                                SQLFiles.Add(Application.StartupPath + "\update" + CurrentFile)
+                            Else
+                                wbcUpdate.DownloadFile(SERVERURL + CurrentFile.Replace("\", "/"), Application.StartupPath + CurrentFile)
+                            End If
+                            lblStatus.Text = label(LanguageFile.UPDATE_LABELS).Label(LanguageFile.DOWNLOADED).Value.Replace("%s", it.Current.Filename)
+                            Application.DoEvents()
                         End If
-                    End If
-                End While
-                UpdateDatabase(SQLFiles)
-                xmlUpdate = Nothing
-                File.Copy(Application.StartupPath + "\update\ServerManifest.xml", Application.StartupPath + "\ServerManifest.xml", True)
+                    End While
+                    UpdateDatabase(SQLFiles)
+                    xmlUpdate = Nothing
+                    File.Copy(Application.StartupPath + "\update\" + UPDATEFILE, Application.StartupPath + "\" + UPDATEFILE, True)
+                End If
+                lblStatus.Text = label(LanguageFile.UPDATE_LABELS).Label(LanguageFile.ENDUPDATE).Value
+                MessageBox.Show(label(LanguageFile.UPDATE_LABELS).Label(LanguageFile.ENDUPDATE).Value, label(LanguageFile.UPDATE_LABELS).Label(LanguageFile.TITLE).Value, MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
 
-            'suppression du répertoire temporaire
-            Directory.Delete(Application.StartupPath + "\update", True)
+                'suppression du répertoire temporaire
+                Directory.Delete(Application.StartupPath + "\update", True)
 
-            IncrementProgress()
+                IncrementProgress()
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TraceError(ex)
         End Try
         Me.Close()
     End Sub
@@ -178,7 +207,7 @@ Public Class frmUpdate
     End Sub
 
     Private Sub BackupFile(ByVal FilePath As String)
-        lblStatus.Text = "Copie de l'ancien fichier " + FilePath
+        lblStatus.Text = label(LanguageFile.UPDATE_LABELS).Label(LanguageFile.DOWNLOADED).Value.Replace("%s", FilePath)
         Try
             File.Copy(FilePath, FilePath + ".bak", True)
         Catch ex As Exception
@@ -186,7 +215,7 @@ Public Class frmUpdate
     End Sub
 
     Private Sub UpdateDatabase(ByVal SqlFiles As ArrayList)
-        Dim db As New Base(Application.StartupPath + "\RestoGestion.db")
+
         Dim it As IEnumerator
 
         it = SqlFiles.GetEnumerator
@@ -196,5 +225,10 @@ Public Class frmUpdate
         End While
 
         db.Close()
+    End Sub
+
+    Public Sub TraceError(ByVal ex As Exception)
+        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        trace.WriteLog(ex.Message + Environment.NewLine + ex.StackTrace)
     End Sub
 End Class

@@ -46,7 +46,7 @@ Public Class frmCustomer
         lblPhoneNumber.Text = label(LanguageFile.CUSTOMER_FORM).Label(LanguageFile.PHONENUMBER).Value
         lblComment.Text = label(LanguageFile.CUSTOMER_FORM).Label(LanguageFile.COMMENT).Value
         'Affectation du fichier d'aide
-        hlpCustomer.HelpNamespace = HELPPATH + "clients.htm"
+        hlpCustomer.HelpNamespace = Consts.HELPPATH + "clients.htm"
         'On affecte l'action de KeyPress à la fonction NextTab chargée d'emuler
         'la touche Tab lorque que l'on appuie sur Entree
         AddHandler txtAddress.KeyPress, AddressOf NextTab

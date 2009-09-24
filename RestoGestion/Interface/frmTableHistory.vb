@@ -39,7 +39,7 @@ Public Class frmTableHistory
         lblAmount.Text = label(LanguageFile.SELL_FORM).Label(LanguageFile.AMOUNT).Value
         lblDiscount.Text = label(LanguageFile.SELL_FORM).Label(LanguageFile.DISCOUNT).Value
         lblSet.Text = label(LanguageFile.SELL_FORM).Label(LanguageFile.SET).Value
-        hlpSell.HelpNamespace = HELPPATH + "historique.htm"
+        hlpSell.HelpNamespace = Consts.HELPPATH + "historique.htm"
         Try
             'Recupération de la liste des plats
             lblTable.Text = SelectedTable.Name

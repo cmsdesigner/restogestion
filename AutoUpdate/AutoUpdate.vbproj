@@ -80,7 +80,6 @@
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Base.vb" />
     <Compile Include="frmUpdate.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -129,6 +128,12 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RestoGestion\RestoGestion.vbproj">
+      <Project>{8938E6C8-02D8-4896-935D-BEC044A79B34}</Project>
+      <Name>RestoGestion</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

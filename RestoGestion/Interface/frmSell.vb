@@ -62,7 +62,7 @@ Public Class frmSell
         AddHandler txtSet.KeyPress, AddressOf NextTab
         AddHandler txtCode.KeyPress, AddressOf NextTab
         AddHandler cboDesignation.KeyPress, AddressOf NextTab
-        hlpSell.HelpNamespace = HELPPATH + "commandes.htm"
+        hlpSell.HelpNamespace = Consts.HELPPATH + "commandes.htm"
 
         Try
             'on remplit les champs

@@ -33,12 +33,13 @@ Partial Class frmTable
         Me.mnuAbout = New System.Windows.Forms.ToolStripMenuItem
         Me.hlpTable = New System.Windows.Forms.HelpProvider
         Me.fraSalle = New System.Windows.Forms.Panel
+        Me.mnuUpdate = New System.Windows.Forms.ToolStripMenuItem
         Me.mnuMenu.SuspendLayout()
         Me.SuspendLayout()
         '
         'mnuMenu
         '
-        Me.mnuMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMeal, Me.mnuCustomer, Me.mnuHistory, Me.mnuEdit, Me.mnuOption, Me.mnuHelpMenu})
+        Me.mnuMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMeal, Me.mnuCustomer, Me.mnuHistory, Me.mnuEdit, Me.mnuOption, Me.mnuUpdate, Me.mnuHelpMenu})
         Me.mnuMenu.Location = New System.Drawing.Point(0, 0)
         Me.mnuMenu.Name = "mnuMenu"
         Me.mnuMenu.Size = New System.Drawing.Size(607, 24)
@@ -112,6 +113,11 @@ Partial Class frmTable
         Me.fraSalle.Size = New System.Drawing.Size(607, 450)
         Me.fraSalle.TabIndex = 1
         '
+        'mnuUpdate
+        '
+        Me.mnuUpdate.Name = "mnuUpdate"
+        Me.mnuUpdate.Size = New System.Drawing.Size(12, 20)
+        '
         'frmTable
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -144,5 +150,6 @@ Partial Class frmTable
     Friend WithEvents hlpTable As System.Windows.Forms.HelpProvider
     Friend WithEvents mnuHistory As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents fraSalle As System.Windows.Forms.Panel
+    Friend WithEvents mnuUpdate As System.Windows.Forms.ToolStripMenuItem
 
 End Class
