@@ -1,5 +1,4 @@
-﻿
-Option Explicit On
+﻿Option Explicit On
 Option Strict On
 
 '***********************************************************
@@ -58,15 +57,6 @@ Public Class LanguageFile
             Throw
         End Try
     End Sub
-
-    Public Sub CloseFile()
-        Try
-            label = Nothing
-        Catch ex As Exception
-            Throw
-        End Try
-
-    End Sub
 #Region "Constantes"
     '''''''''''''''''''''
     '' CONSTANTES
@@ -83,6 +73,7 @@ Public Class LanguageFile
     Public Const HISTORY_FORM As String = "History"
     Public Const ABOUT_FORM As String = "About"
     Public Const PRINT_LABELS As String = "Print"
+    Public Const UPDATE_LABELS As String = "Update"
     Public Const ERRORS_LABELS As String = "Error"
 #End Region
 #Region "Labels"
@@ -108,6 +99,7 @@ Public Class LanguageFile
     Public Const EDIT_MENU As String = "Edit"
     Public Const HISTORY_MENU As String = "History"
     Public Const HELP_SUB_MENU As String = "HelpMenu"
+    Public Const UPDATE_MENU As String = "UpdateMenu"
 #End Region
 #Region "Modify"
     Public Const ENABLE As String = "Enable"
@@ -231,6 +223,15 @@ Public Class LanguageFile
     'Public Const MEAL As String = "Meal"
     'Public Const QUANTITY As String = "Quantity"
     'Public Const SUBAMOUNT As String = "SubAmount"
+#End Region
+#Region "Update"
+    Public Const DOWNLOADING As String = "Downloading"
+    Public Const DOWNLOADED As String = "Downloaded"
+    Public Const NOUPDATE As String = "NoUpdate"
+    Public Const ENDUPDATE As String = "EndUpdate"
+    Public Const TITLE As String = "Title"
+    Public Const BACKUP As String = "Backup"
+    Public Const UPDATEQUESTION As String = "UpdateQuestion"
 #End Region
 #Region "Error"
     Public Const CODEINVALID As String = "CodeInvalid"

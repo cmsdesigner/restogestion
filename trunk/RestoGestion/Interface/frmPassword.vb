@@ -41,7 +41,7 @@ Public Class frmPassword
         Else
             lblTitle.Text = label(LanguageFile.PASSWORD_FORM).Label(LanguageFile.APP_TITLE).Value
         End If
-        hlpPassword.HelpNamespace = HELPPATH + "index.htm"
+        hlpPassword.HelpNamespace = Consts.HELPPATH + "index.htm"
         passwordOk = False
     End Sub
 

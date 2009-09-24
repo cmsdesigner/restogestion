@@ -48,7 +48,7 @@ Public Class frmAbout
                             + "You should have received a copy of the GNU General Public License along with " _
                             + "this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA"
         'Affectation du fichier d'aide
-        hlpAbout.HelpNamespace = HELPPATH + "about.htm"
+        hlpAbout.HelpNamespace = Consts.HELPPATH + "about.htm"
         'Selection du bouton OK
         cmdOk.Focus()
     End Sub
@@ -60,6 +60,6 @@ Public Class frmAbout
 
     Private Sub cmdCredit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdCredit.Click
         'On affiche l'aide à la page correpondante
-        Help.ShowHelp(Me, HELPPATH + "credits.htm")
+        Help.ShowHelp(Me, Consts.HELPPATH + "credits.htm")
     End Sub
 End Class

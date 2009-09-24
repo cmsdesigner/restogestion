@@ -92,7 +92,7 @@ Public Class frmModify
         AddHandler updLeft.KeyPress, AddressOf NextTab
         AddHandler updTop.KeyPress, AddressOf NextTab
         AddHandler updWidth.KeyPress, AddressOf NextTab
-        hlpModify.HelpNamespace = HELPPATH + "modification.htm"
+        hlpModify.HelpNamespace = Consts.HELPPATH + "modification.htm"
 
         Try
             'on remplit les champs avec les infos de la table

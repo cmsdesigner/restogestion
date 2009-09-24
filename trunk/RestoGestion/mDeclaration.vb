@@ -29,8 +29,6 @@ Option Strict On
 '*                                                         *
 '***********************************************************
 
-Imports System.Data.SQLite
-
 Module Declaration
     '---Les varibales---
 
@@ -45,14 +43,6 @@ Module Declaration
 
     'Formulaire
     Public frmMain As frmTable
-	
-    '---Les constantes---
-    Public Const MAX_ENTRY As Integer = 327
-    Public ReadOnly HELPPATH As String = Application.StartupPath + "\Aide\"
-    Public ReadOnly BASEPATH As String = Application.StartupPath + "\RestoGestion.db"
-    Public ReadOnly LANGUAGEFILEPATH As String = Application.StartupPath + "\Langues\"
-    Public ReadOnly LOGFILE As String = Application.StartupPath + "\RestoGestion.log"
-    Public ReadOnly PRINTFILEPATH As String = Application.StartupPath + "\Print.xml"
 
     '---Les types---
     Public Structure RECT
@@ -63,3 +53,13 @@ Module Declaration
     End Structure
 
 End Module
+
+Public Class Consts
+    '---Les constantes---
+    Public Const MAX_ENTRY As Integer = 327
+    Public Shared ReadOnly HELPPATH As String = Application.StartupPath + "\Aide\"
+    Public Shared ReadOnly BASEPATH As String = Application.StartupPath + "\RestoGestion.db"
+    Public Shared ReadOnly LANGUAGEFILEPATH As String = Application.StartupPath + "\Langues\"
+    Public Shared ReadOnly LOGFILE As String = Application.StartupPath + "\RestoGestion.log"
+    Public Shared ReadOnly PRINTFILEPATH As String = Application.StartupPath + "\Print.xml"
+End Class

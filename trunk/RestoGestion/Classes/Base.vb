@@ -155,13 +155,17 @@ Public Class Base
     Private Function PrepareQuery(ByVal Query As String, ByVal params As ArrayList) As IDbCommand
         Dim it As IEnumerator
         Dim result As IDbCommand
+        Dim param As IDbDataParameter
 
         result = Connexion.CreateCommand
+        result.CommandText = Query
         it = params.GetEnumerator
         While it.MoveNext
-            result.Parameters.Add(it.Current)
+            param = result.CreateParameter
+            param.Value = it.Current
+            result.Parameters.Add(param)
         End While
-
+        result.Prepare()
         Return result
     End Function
 End Class

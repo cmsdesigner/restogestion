@@ -216,8 +216,9 @@ Public Class frmTable
         mnuEdit.Text = label(LanguageFile.TABLE_FORM).Label(LanguageFile.EDIT_MENU).Value
         mnuHelpMenu.Text = label(LanguageFile.TABLE_FORM).Label(LanguageFile.HELP_SUB_MENU).Value
         mnuHistory.Text = label(LanguageFile.TABLE_FORM).Label(LanguageFile.HISTORY_MENU).Value
+        mnuUpdate.Text = label(LanguageFile.TABLE_FORM).Label(LanguageFile.UPDATE_MENU).Value
         Me.Text = label(LanguageFile.TABLE_FORM).Label(LanguageFile.NAME).Value
-        hlpTable.HelpNamespace = HELPPATH + "index.htm"
+        hlpTable.HelpNamespace = Consts.HELPPATH + "index.htm"
 
         Try
             it = resto.GetEnumerator
@@ -255,7 +256,7 @@ Public Class frmTable
     End Sub
 
     Private Sub mnuHelp_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuHelp.Click
-        Help.ShowHelp(Me, HELPPATH + "index.htm")
+        Help.ShowHelp(Me, Consts.HELPPATH + "index.htm")
     End Sub
 
     Private Sub mnuHistory_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuHistory.Click
@@ -283,4 +284,8 @@ Public Class frmTable
 
         Return result
     End Function
+
+    Private Sub mnuUpdate_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles mnuUpdate.Click
+        VerifyUpdate()
+    End Sub
 End Class

@@ -53,7 +53,7 @@ Public Class frmPrint
 
     Private Sub frmPrint_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Try
-            bill = New PrintFile(PRINTFILEPATH)
+            bill = New PrintFile(Consts.PRINTFILEPATH)
 
             Me.Width = CInt(bill.Width)
             Me.Height = CInt(bill.Height)
